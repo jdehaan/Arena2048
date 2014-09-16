@@ -1,0 +1,113 @@
+﻿<catel:DataWindow x:Class="Wpf2048.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:catel="http://catel.codeplex.com"
+        xmlns:my="clr-namespace:Wpf2048.Views"
+        Title="MainWindow" Height="600" Width="500"
+        ShowInTaskbar="True"
+        SizeToContent="Manual"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="Manual">
+    <catel:DataWindow.Resources>
+        <ResourceDictionary>
+            <catel:BooleanToHidingVisibilityConverter x:Key="False2Hidden"/>
+            <catel:BooleanToOppositeBooleanConverter x:Key="Invert" />
+            <catel:ValueConverterGroup x:Key="True2Hidden">
+                <catel:BooleanToHidingVisibilityConverter />
+                <catel:BooleanToOppositeBooleanConverter />
+            </catel:ValueConverterGroup>
+        </ResourceDictionary>
+    </catel:DataWindow.Resources>
+    <Grid Background="#FFBBADA0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Button Command="{Binding NewGame}" Content="New Game" />
+        <GroupBox Header="Game Options" Grid.Column="1" Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <CheckBox IsChecked="{Binding KeepPlaying}">Keep playing</CheckBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0" Grid.Row="0" x:Name="StartTilesSlider"
+                            Value="{Binding StartTiles}" Maximum="10" Minimum="2" 
+                            />
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ElementName=StartTilesSlider,Path=Value}" Margin="4"></TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="0">Start tiles</TextBlock>
+                    <Slider Grid.Column="0" Grid.Row="1" x:Name="GridSizeSlider"
+                            Value="{Binding GridSize}" Maximum="10" Minimum="2" 
+                            />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ElementName=GridSizeSlider,Path=Value}" Margin="4"></TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="1">Grid size</TextBlock>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="AI Options" Grid.Column="2" Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <ComboBox ItemsSource="{Binding AvailableBots}" SelectedItem="{Binding SelectedBot}" />
+                <CheckBox IsChecked="{Binding AutoPlay}">Auto Play (AI)</CheckBox>
+                <CheckBox IsChecked="{Binding TrainingMode}">Train in manual mode</CheckBox>
+                <my:BotView DataContext="{Binding SelectedBot}" />
+            </StackPanel>
+        </GroupBox>
+        <StackPanel Orientation="Vertical"  Grid.Row="1" Grid.Column="0">
+            <GroupBox Header="Score">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="26"
+                   Text="{Binding Score}" />
+            </GroupBox>
+            <GroupBox Header="High Score">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="30"
+                   Text="{Binding HighScore}" />
+            </GroupBox>
+        </StackPanel>
+        <GroupBox Header="Grid Evaluators"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock>
+                    <Run Text="Monotonicity"></Run>
+                    <Run Text="{Binding Monotonicity, StringFormat=N2}"></Run>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Monotonicity2"></Run>
+                    <Run Text="{Binding Monotonicity2, StringFormat=N2}"></Run>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Smoothness"></Run>
+                    <Run Text="{Binding Smoothness, StringFormat=N2}"></Run>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Max Value"></Run>
+                    <Run Text="{Binding MaxValue, StringFormat=N2}"></Run>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Average Value"></Run>
+                    <Run Text="{Binding AverageValue, StringFormat=N2}"></Run>
+                </TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <Grid Grid.Row="2" Grid.ColumnSpan="3">
+            <my:GridView DataContext="{Binding Grid}" />
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" FontWeight="Bold"
+                       Visibility="{Binding IsGameOver, Converter={StaticResource False2Hidden}}"
+                       >Game Over!</TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" FontWeight="Bold"
+                       Visibility="{Binding IsGameWon, Converter={StaticResource False2Hidden}}"
+                       >Game Won!</TextBlock>
+        </Grid>
+    </Grid>
+</catel:DataWindow>
