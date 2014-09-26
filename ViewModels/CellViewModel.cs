@@ -1,4 +1,5 @@
-﻿using Catel.MVVM;
+﻿using Catel.Fody;
+using Catel.MVVM;
 using System;
 using System.Windows;
 using Wpf2048.Models;
@@ -13,7 +14,7 @@ namespace Wpf2048.ViewModels
         }
 
         [Model]
-        [Catel.Fody.Expose("Tile")]
+        [Expose("Tile")]
         public CellModel Model { get; private set; }
 
         private void OnTileChanged()

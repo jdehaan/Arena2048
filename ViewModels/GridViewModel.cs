@@ -1,4 +1,5 @@
-﻿using Catel.MVVM;
+﻿using Catel.Fody;
+using Catel.MVVM;
 using Wpf2048.Models;
 
 namespace Wpf2048.ViewModels
@@ -11,7 +12,7 @@ namespace Wpf2048.ViewModels
         }
 
         [Model]
-        [Catel.Fody.Expose("Cells")]
+        [Expose("Cells")]
         public GridModel Model { get; private set; }
     }
 }

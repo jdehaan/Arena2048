@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wpf2048.Logic.Bot;
 
 namespace Wpf2048.Services
@@ -35,7 +33,7 @@ namespace Wpf2048.Services
         [ImportMany(typeof(IBot))]
         public IEnumerable<IBot> Bots { get; set; }
 
-        private CompositionContainer _container;
+        private readonly CompositionContainer _container;
 
         public void Dispose()
         {

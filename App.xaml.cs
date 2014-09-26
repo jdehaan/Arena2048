@@ -1,13 +1,10 @@
 ﻿using Catel.ApiCop;
 using Catel.ApiCop.Listeners;
-using Catel.IoC;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+using Catel.IoC;
+using Catel.Logging;
 using Wpf2048.Services;
 
 namespace Wpf2048
@@ -21,7 +18,14 @@ namespace Wpf2048
         {
             base.OnStartup(e);
 
+        	#if DEBUG
+        	LogManager.AddDebugListener();
+        	#endif
+            
+        	//TODO: does not work, reason to investigate....
             //ServiceLocator.Default.RegisterTypesUsingDefaultNamingConvention();
+            // doing it manually instead like for Catel 3.9
+            ServiceLocator.Default.RegisterInstance(typeof(IBotsManager), new BotsManager());
         }
 
         protected override void OnExit(ExitEventArgs e)
