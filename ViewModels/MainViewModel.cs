@@ -1,4 +1,5 @@
-﻿using Catel.MVVM;
+﻿using Catel.Fody;
+using Catel.MVVM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,32 +13,42 @@ namespace Wpf2048.ViewModels
 {
     class MainViewModel : ViewModelBase, IDisposable
     {
-        public MainViewModel(/*IBotsManager botsManager*/)
+        public MainViewModel(IBotsManager botsManager)
         {
-            /*
             _botsManager = botsManager;
             _ai = new BackgroundWorker();
             _ai.WorkerSupportsCancellation = true;
             _ai.DoWork += AiDoWork;
-            */
+            
+            Game = new GameModel();
+
             NewGame = new Command(NewGameExecute, NewGameCanExecute);
             MoveLeft = new Command(MoveLeftExecute);
             MoveRight = new Command(MoveRightExecute);
             MoveUp = new Command(MoveUpExecute);
             MoveDown = new Command(MoveDownExecute);
-
-            Game = new GameModel();
         }
 
         [Model]
-        [Catel.Fody.Expose("Grid")]
-        [Catel.Fody.Expose("Score")]
-        [Catel.Fody.Expose("HighScore")]
-        [Catel.Fody.Expose("IsGameOver")]
-        [Catel.Fody.Expose("IsGameWon")]
-        [Catel.Fody.Expose("KeepPlaying")]
-        [Catel.Fody.Expose("StartTiles")]
+        [Expose("Grid")]
+        [Expose("Score")]
+        [Expose("HighScore")]
+        [Expose("IsGameOver")]
+        [Expose("IsGameWon")]
+        [Expose("KeepPlaying")]
+        [Expose("StartTiles")]
         public GameModel Game { get; private set; }
+
+        //TODO: Why is the binding in the view not working properly?
+        // tried here to see if ExposeAttribute was the issue, but activating this does not work either
+        //
+		// [DEBUG] [Catel.MVVM.ViewModelFactory] Could not construct view model 'Wpf2048.ViewModels.GridViewModel' using injection of data context 'null'
+		//
+		// but Grid is not null...
+		// xaml: <my:GridView DataContext="{Binding MyGrid}" />
+		// is there something wrong with this binding? Using SnoopWpf & browsing to the property leads to a correct loading of the ViewModel...
+		
+        //public GridModel Grid { get { return Game.Grid; } }
 
         public bool AutoPlay { get; set; }
 
@@ -70,7 +81,7 @@ namespace Wpf2048.ViewModels
 
         public IBot SelectedBot { get; set; }
 
-        private void AiDoWork(object Sender, System.ComponentModel.DoWorkEventArgs e)
+        private void AiDoWork(object Sender, DoWorkEventArgs e)
         {
             while (!Game.IsGameOver && !Game.IsGameWon)
             {
